@@ -1,0 +1,17 @@
+{
+	"scripts": {
+		"typecheck": "tsc --noEmit",
+		"dev:email": "email dev --dir src/infra/emails/templates"
+	},
+	"devDependencies": {
+		"@types/aws-lambda": "^8.10.152",
+		"@types/node": "^24.2.0",
+		"tsx": "^4.20.3",
+		"typescript": "^5.9.2"
+	},
+	"dependencies": {
+		"@aws-sdk/client-ec2": "^3.862.0",
+		"@aws-sdk/client-route-53": "^3.862.0",
+		"zod": "^4.0.15"
+	}
+}

@@ -1,0 +1,9 @@
+statements:
+  - Effect: Allow
+    Action:
+      - ec2:DescribeInstances
+    Resource: "*"
+  - Effect: Allow
+    Action:
+      - route53:ChangeResourceRecordSets
+    Resource: "arn:aws:route53:::hostedzone/${env:HOSTED_ZONE_ID}"

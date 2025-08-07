@@ -1,0 +1,14 @@
+dns:
+  handler: src/functions/dns.handler
+  events:
+    - eventBridge:
+        pattern:
+          source:
+            - "aws.ec2"
+          detail-type:
+            - "EC2 Instance State-change Notification"
+          detail:
+            state:
+              - running
+            instance-id:
+              - ${env:INSTANCE_ID}
