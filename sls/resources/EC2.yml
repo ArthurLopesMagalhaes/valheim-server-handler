@@ -1,0 +1,11 @@
+Resources:
+  EC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0c55b159cbfafe1f0
+      InstanceType: t3a.small
+      KeyName: my-key-pair
+      SecurityGroupIds:
+        - sg-0123456789abcdef0
+      SubnetId: subnet-0123456789abcdef0
+      Tags:
