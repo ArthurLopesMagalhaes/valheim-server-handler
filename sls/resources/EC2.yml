@@ -1,11 +1,40 @@
 Resources:
-  EC2:
+  ValheimServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: Valheim EC2 Security Group
+      GroupDescription: Security group for the Valheim server
+      SecurityGroupIngress: 
+        - Description: SSH connection
+          IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+
+        - Description: Valheim server ports
+          IpProtocol: udp
+          FromPort: 2456
+          ToPort: 2458
+          CidrIp: 0.0.0.0/0
+
+  ValheimServerInstance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-0c55b159cbfafe1f0
       InstanceType: t3a.small
-      KeyName: my-key-pair
+      ImageId: ami-0a174b8e659123575
       SecurityGroupIds:
-        - sg-0123456789abcdef0
-      SubnetId: subnet-0123456789abcdef0
-      Tags:
+        - !Ref ValheimServerSecurityGroup
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 20
+            VolumeType: gp3
+            DeleteOnTermination: true
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          yum update -y
+          yum install -y docker
+          systemctl start docker
+          systemctl enable docker
+          usermod -a -G docker ec2-user

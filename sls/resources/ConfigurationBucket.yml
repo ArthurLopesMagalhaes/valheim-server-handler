@@ -1,0 +1,6 @@
+Resources:
+  ValheimDockerComposeBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: ${env:S3_BUCKET_NAME}

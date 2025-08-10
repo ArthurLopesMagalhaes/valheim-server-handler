@@ -1,6 +1,4 @@
-# "org" ensures this Service is used with the correct Serverless Framework Access Key.
 org: arthurworkspace
-# "service" is the name of this project. This will also be added to your AWS resource names.
 service: valheim-server-handler
 
 provider:
@@ -12,6 +10,19 @@ provider:
   environment: ${file(./sls/config/env.yml)}
   iam:
     role: ${file(./sls/config/role.yml)}
+
+plugins:
+  - serverless-scriptable-plugin
+
+custom:
+  bucketName: ${env:S3_BUCKET_NAME}
+  scriptable:
+    hooks:
+      after:deploy:deploy:
+        - echo "Copiando docker-compose.yml para o S3..."
+        - aws s3 cp src/docker-compose.yml s3://${self:custom.bucketName}/docker-compose.yml
+        - echo "docker-compose.yml copiado com sucesso!"
+
 
 package:
   individually: true
@@ -26,5 +37,11 @@ build:
     external:
       - "@aws-sdk/*"
 
+
+
 functions:
   - ${file(./sls/functions/dns.yml)}
+
+resources:
+  - ${file(./sls/resources/EC2.yml)}
+  - ${file(./sls/resources/ConfigurationBucket.yml)}
