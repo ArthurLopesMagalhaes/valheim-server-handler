@@ -10,5 +10,3 @@ dns:
           detail:
             state:
               - running
-            instance-id:
-              - ${env:INSTANCE_ID}
