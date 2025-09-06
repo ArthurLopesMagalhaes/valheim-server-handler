@@ -1,10 +1,40 @@
 Resources:
+  ValheimInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      Path: /
+      Policies:
+        - PolicyName: "S3ReadAccess"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "s3:GetObject"
+                Resource: "arn:aws:s3:::${env:S3_BUCKET_NAME}/docker-compose.yml"
+
+  ValheimInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref ValheimInstanceRole
+
   ValheimServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: Valheim EC2 Security Group
       GroupDescription: Security group for the Valheim server
-      SecurityGroupIngress: 
+      SecurityGroupIngress:
         - Description: SSH connection
           IpProtocol: tcp
           FromPort: 22
@@ -20,8 +50,9 @@ Resources:
   ValheimServerInstance:
     Type: AWS::EC2::Instance
     Properties:
+      IamInstanceProfile: !Ref ValheimInstanceProfile
       InstanceType: t3a.small
-      ImageId: ami-0a174b8e659123575
+      ImageId: ami-035efd31ab8835d8a
       SecurityGroupIds:
         - !Ref ValheimServerSecurityGroup
       BlockDeviceMappings:
@@ -31,10 +62,35 @@ Resources:
             VolumeType: gp3
             DeleteOnTermination: true
       UserData:
-        Fn::Base64: |
+        Fn::Base64: !Sub |
           #!/bin/bash
-          yum update -y
-          yum install -y docker
-          systemctl start docker
+          set -e
+
+          apt-get update -y
+          apt-get install -y ca-certificates curl unzip gnupg lsb-release
+
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+          rm -rf awscliv2.zip
+
+          install -m 0755 -d /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+          chmod a+r /etc/apt/keyrings/docker.asc
+
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          apt-get update -y
+
+          apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
           systemctl enable docker
-          usermod -a -G docker ec2-user
+          systemctl start docker
+
+          usermod -aG docker ubuntu
+
+          mkdir -p /opt/valheim
+          cd /opt/valheim
+
+          aws s3 cp s3://${ValheimDockerComposeBucket}/docker-compose.yml .
+
+          docker compose up -d

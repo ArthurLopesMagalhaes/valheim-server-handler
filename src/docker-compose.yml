@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  valheim:
+    image: lloesche/valheim-server
+    container_name: valheim-server
+    restart: unless-stopped
+    ports:
+      - "2456-2458:2456-2458/udp"
+    environment:
+      - SERVER_NAME=ServerEC
+      - WORLD_NAME=NewWorldName
+      - SERVER_PASS=StrongPassword
+      - SERVER_PUBLIC=true
+      - TZ=America/Sao_Paulo
+      - UPDATE_IF_IDLE=true
+      - BACKUPS_CRON=0 0 * * *
+      - BACKUPS_DIRECTORY=/config/backups
+      - BACKUPS_MAX_AGE=2
+      - BACKUPS_MAX_COUNT=3
+      - BACKUPS_IF_IDLE=false
+      - VALHEIM_PLUS=true
+    volumes:
+      - ./config:/config
+      - ./data:/opt/valheim
+# see https://github.com/lloesche/valheim-server-docker
