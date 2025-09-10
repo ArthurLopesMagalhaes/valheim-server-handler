@@ -58,7 +58,9 @@ Antes de iniciar, você precisa ter instalado localmente:
     RECORD_NAME=subdomain.my-domain.com
     S3_BUCKET_NAME=super-senha
    ```
-4. Faça o deploy da infraestrutura com o Serverless:
+4. Configure o arquivo `docker-compose.yml`:
+   > Acesse esse link para mais detalhes: [repositório](lloesche/valheim-server-docker)
+5. Faça o deploy da infraestrutura com o Serverless:
    ```bash
    sls deploy
    ```
