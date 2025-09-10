@@ -1,79 +1,81 @@
+🇧🇷 - Portuguese version [here](README.pt.md).
+
 # 🎮 Valheim Server on AWS
 
-Este projeto provisiona e executa um servidor dedicado do **Valheim** utilizando **AWS EC2**, **Docker** e **Serverless Framework**, permitindo rodar a infraestrutura de forma automatizada e escalável.
+This project provisions and runs a dedicated **Valheim** server using **AWS EC2**, **Docker**, and **Serverless Framework**, allowing the infrastructure to run in an automated and scalable way.
 
 ---
 
-## 🚀 Tecnologias utilizadas
+## 🚀 Technologies used
 
-- **AWS EC2** – instância para hospedar o servidor dedicado
-- **AWS CloudFormation** – provisionamento de recursos via Serverless
-- **Serverless Framework** – automatização do deploy da infraestrutura
-- **Docker** – container do servidor Valheim
-- **Node.js + TypeScript** – scripts de automação
-- **GitHub** – versionamento do código
+- **AWS EC2** – instance to host the dedicated server
+- **AWS CloudFormation** – resource provisioning via Serverless
+- **Serverless Framework** – infrastructure deployment automation
+- **Docker** – Valheim server container
+- **Node.js + TypeScript** – automation scripts
+- **GitHub** – code versioning
 
 ---
 
-## 🏗 Arquitetura
+## 🏗 Architecture
 
-A infraestrutura funciona da seguinte forma:
+The infrastructure works as follows:
 
-- **Serverless Framework** → provisiona EC2, Lambda Function e S3 Bucket.
-- **Lambda Function** → faz update do IP dinâmico no domínio.
-- **EC2** → quando sobe, baixa o `docker-compose.yml` do S3 e executa.
+- **Serverless Framework** → provisions EC2, Lambda Function, and S3 Bucket.
+- **Lambda Function** → updates the dynamic IP on the domain.
+- **EC2** → when launched, downloads the `docker-compose.yml` from S3 and executes it.
 
-Se parece com algo assim:
+It looks something like this:
 
-## ![Arquitetura do servidor](./docs/arch-diagram.png)
+## ![Server architecture](./docs/arch-diagram-en.png)
 
-## 📦 Pré-requisitos
+## 📦 Prerequisites
 
-Antes de iniciar, você precisa ter instalado localmente:
+Before starting, you need to have the following installed locally:
 
 - [Node.js](https://nodejs.org/)
-- [Serverless Framework](https://www.serverless.com/framework/docs/getting-started) configurado
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) configurado com suas credenciais
+- [Serverless Framework](https://www.serverless.com/framework/docs/getting-started) configured
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) configured with your credentials
 - [Docker](https://docs.docker.com/get-docker/)
-- Uma _hosted zone_ configurada no Route 53
+- A hosted zone configured in Route 53
 
 ---
 
-## ⚙️ Como configurar
+## ⚙️ How to set up
 
-1. Clone este repositório:
+1. Clone this repository:
 
    ```bash
-   git clone https://github.com/SEU-USUARIO/valheim-aws-server.git
+   git clone https://github.com/YOUR-USERNAME/valheim-aws-server.git
    cd valheim-aws-server
    ```
 
-2. Instale as dependências:
+2. Install dependencies:
    ```bash
    pnpm install
    ```
-3. Renomeie o arquivo .env.example para .env e configure as variáveis de ambiente:
+3. Rename the .env.example file to .env and configure the environment variables:
    ```bash
     HOSTED_ZONE_ID=
     RECORD_NAME=subdomain.my-domain.com
-    S3_BUCKET_NAME=super-senha
+    S3_BUCKET_NAME=super-secret
    ```
-4. Configure o arquivo `docker-compose.yml`:
-   > Acesse esse link para mais detalhes: [repositório](lloesche/valheim-server-docker)
-5. Faça o deploy da infraestrutura com o Serverless:
+4. Configure the `docker-compose.yml` file:
+   > Check this link for more details: [repository](lloesche/valheim-server-docker)
+5. Deploy the infrastructure with Serverless:
    ```bash
    sls deploy
    ```
 
-## 🎮 Como acessar o servidor
+## 🎮 How to access the server
 
-1. Abra o Valheim
-2. Vá em Join Game
-3. Insira seu domínio e senha configurados
-4. Divirta-se :)
+1. Open Valheim
+2. Go to Join Game
+3. Enter your configured domain and password
+4. Have fun :)
 
-## 🙌 Agradecimentos e Referências
+## 🙌 Acknowledgements and References
 
-- [lloesche/valheim-server-docker](https://github.com/lloesche/valheim-server-docker) - Imagem docker usada no projeto.
+- [lloesche/valheim-server-docker](https://github.com/lloesche/valheim-server-docker) - Docker image used in the project.
 
-- [Hosting your own dedicated Valheim server in the cloud](https://aws.amazon.com/pt/blogs/gametech/hosting-your-own-dedicated-valheim-server-in-the-cloud/) - Inspiração para a arquitetura adotada.
+- [Hosting your own dedicated Valheim server in the cloud](https://aws.amazon.com/pt/blogs/gametech/hosting-your-own-dedicated-valheim-server-in-the-cloud/) - Inspiration for the adopted architecture.
