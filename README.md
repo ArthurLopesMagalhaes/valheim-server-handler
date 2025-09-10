@@ -12,8 +12,6 @@ This project provisions and runs a dedicated **Valheim** server using **AWS EC2*
 - **AWS CloudFormation** – resource provisioning via Serverless
 - **Serverless Framework** – infrastructure deployment automation
 - **Docker** – Valheim server container
-- **Node.js + TypeScript** – automation scripts
-- **GitHub** – code versioning
 
 ---
 

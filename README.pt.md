@@ -12,8 +12,6 @@ Este projeto provisiona e executa um servidor dedicado do **Valheim** utilizando
 - **AWS CloudFormation** – provisionamento de recursos via Serverless
 - **Serverless Framework** – automatização do deploy da infraestrutura
 - **Docker** – container do servidor Valheim
-- **Node.js + TypeScript** – scripts de automação
-- **GitHub** – versionamento do código
 
 ---
 
